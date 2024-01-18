@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Razorpay Payment Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- <h1>Razorpay Payment Demo</h1> -->
+      <img src="https://phsgirlspgnoida.com/wp-content/uploads/2021/07/2bed_new-1024x765.jpg" alt="">
+      <button id="payButton">Pay with Razorpay</button>
+    </div>
+
+    <script>
+      
+      let options = {
+
+        key: "rzp_test_YxEKuHprftUNVs",
+        amount: 100, // Amount in paise (100 paise = 1 INR)
+        name: "Surbhi groups of girls pg",
+        description: "Product description",
+        image: "https://phsgirlspgnoida.com/wp-content/uploads/2021/07/2bed_new-1024x765.jpg",
+        handler: function (response) {
+          alert(
+            "Payment successful! Payment ID: " + response.razorpay_payment_id
+          );
+          // You can send the payment ID to your server for further processing
+          sendPaymentToServer(response.razorpay_payment_id);
+        },
+        prefill: {
+          name: "John Doe",
+          email: "john@example.com",
+          contact: "9876543210",
+        },
+        theme: {
+          color: "#F37254", 
+          // "#F37254" 
+
+        },
+      };
+
+      let razorpay = new Razorpay(options);
+
+      document.getElementById("payButton").onclick = function () {
+        razorpay.open();
+      };
+
+      // Function to send payment details to your server
+      function sendPaymentToServer(paymentId) {
+        let xhr = new XMLHttpRequest();
+        let url = "your-server-endpoint"; // Replace with your server endpoint
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log("Payment details sent to server:", xhr.responseText);
+          } else if (xhr.readyState == 4 && xhr.status != 200) {
+            console.error(
+              "Error sending payment details:",
+              xhr.status,
+              xhr.statusText
+            );
+          }
+        };
+
+        let data = JSON.stringify({
+          
+          payment_id: paymentId,
+        });
+
+        xhr.send(data);
+      }
+
+    </script>
+  </body>
+</html>
